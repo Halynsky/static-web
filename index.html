@@ -1,178 +1,25 @@
 <html>
-	<head>
-		<title>My first three.js app</title>
-		<style>
-			body { margin: 0; }
-			canvas { 
-			width: 100% !Important; 
-			height: 100% !Important; 
-			}
-		</style>
-	</head>
-	<body>
-	
-		<div id="container"></div>
+<head>
+  <title>My first three.js app</title>
+  <link rel="stylesheet" type="text/css" href="css/index.css">
+</head>
+<body>
 
-		<script src="js/three.min.js"></script>
-		<script>
+<div id="menu">
+  <h1>Chose video for DEMO:</h1>
+  <div class="btn" onclick="loadVideo('video/360_Test_Drive_Megane_GT.mp4')">Auto test drive</div>
+  <div class="btn" onclick="loadVideo('video/Apartment_tour.mp4')">Apartment tour</div>
+  <div class="btn" onclick="loadVideo('video/GoPro-VR-Tahiti-Surf.mp4')">GoPro Surf</div>
 
-		
+</div>
 
-			var camera, scene, renderer;
+<div id="container"></div>
 
-			var texture_placeholder,
-			isUserInteracting = false,
-			onMouseDownMouseX = 0, onMouseDownMouseY = 0,
-			lon = 0, onMouseDownLon = 0,
-			lat = 0, onMouseDownLat = 0,
-			phi = 0, theta = 0,
-			distance = 500;
+<script src="libs/three.min.js"></script>
+<script src="libs/jquery.min.js"></script>
 
-			init();
-			animate();
-
-			function init() {
-			
-				var container, mesh;
-				container = document.getElementById( 'container' );
-				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1100 );
-				camera.target = new THREE.Vector3( 0, 0, 0 );
-				scene = new THREE.Scene();
-				var geometry = new THREE.SphereBufferGeometry( 500, 60, 40 );
-				geometry.scale( - 1, 1, 1 );
-				var video = document.createElement( 'video' );
-				//video.width = 640;
-				//video.height = 360;
-				video.autoplay = true;
-				video.loop = true;
-				video.setAttribute('crossorigin', 'anonymous');
-//				video.src = "https://threejs.org/examples/textures/pano.webm";
-//				video.src = "https://s3-eu-west-1.amazonaws.com/ireland-video-output/videos/pan/TahitiSurf360.mp4";
-				video.src = "video/Cockpit360.mp4";
-//				video.src = "video/Apartment_tour.mp4";
-//				video.src = "video/360_Test_Drive_Megane_GT.mp4";
-				var texture = new THREE.VideoTexture( video );
-				texture.minFilter = THREE.LinearFilter;
-				texture.format = THREE.RGBFormat;
-
-				var material   = new THREE.MeshBasicMaterial( { map : texture } );
-
-				mesh = new THREE.Mesh( geometry, material );
-
-				scene.add( mesh );
-
-				renderer = new THREE.WebGLRenderer();
-				renderer.setPixelRatio( window.devicePixelRatio );
-				renderer.setSize( 1280, 720 );
-				container.appendChild( renderer.domElement );
-
-				document.addEventListener( 'mousedown', onDocumentMouseDown, false );
-				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-				document.addEventListener( 'mouseup', onDocumentMouseUp, false );
-				//document.addEventListener( 'mousewheel', onDocumentMouseWheel, false );
-				//document.addEventListener( 'MozMousePixelScroll', onDocumentMouseWheel, false);
-
-				//
-
-				window.addEventListener( 'resize', onWindowResize, false );
-
-			}
-
-			function onWindowResize() {
-
-				camera.aspect = window.innerWidth / window.innerHeight;
-				camera.updateProjectionMatrix();
-
-				//renderer.setSize( window.innerWidth, window.innerHeight );
-
-			}
-
-			function onDocumentMouseDown( event ) {
-
-				event.preventDefault();
-
-				isUserInteracting = true;
-
-				onPointerDownPointerX = event.clientX;
-				onPointerDownPointerY = event.clientY;
-
-				onPointerDownLon = lon;
-				onPointerDownLat = lat;
-
-			}
-
-			function onDocumentMouseMove( event ) {
-
-				if ( isUserInteracting === true ) {
-
-					lon = ( onPointerDownPointerX - event.clientX ) * 0.1 + onPointerDownLon;
-					lat = - ( event.clientY - onPointerDownPointerY ) * 0.1 + onPointerDownLat;
-
-				}
-
-			}
-
-			function onDocumentMouseUp( event ) {
-
-				isUserInteracting = false;
-
-			}
-
-			function onDocumentMouseWheel( event ) {
-
-				// WebKit
-
-				if ( event.wheelDeltaY ) {
-
-					distance -= event.wheelDeltaY * 0.05;
-
-				// Opera / Explorer 9
-
-				} else if ( event.wheelDelta ) {
-
-					distance -= event.wheelDelta * 0.05;
-
-				// Firefox
-
-				} else if ( event.detail ) {
-
-					distance += event.detail * 1.0;
-
-				}
-
-			}
-
-			function animate() {
-
-				requestAnimationFrame( animate );
-				update();
-
-			}
-
-			function update() {
-
-				lat = Math.max( - 89.9, Math.min( 89.9, lat ) );
-				phi = THREE.Math.degToRad( 90 - lat );
-				theta = THREE.Math.degToRad( lon );
-
-				camera.position.x = distance * Math.sin( phi ) * Math.cos( theta );
-				camera.position.y = distance * Math.cos( phi );
-				camera.position.z = distance * Math.sin( phi ) * Math.sin( theta );
-
-				camera.lookAt( camera.target );
-
-				
-				// distortion
-				//camera.position.copy( camera.target ).negate();
-				
-
-				renderer.render( scene, camera );
-
-			}
-			
+<script src="js/index.js"></script>
 
 
-		
-		</script>
-	</body>
+</body>
 </html>
