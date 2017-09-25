@@ -32,9 +32,8 @@ function init(file) {
   //video.height = 360;
   video.autoplay = true;
   video.loop = true;
+  video.volume = 0;
   video.setAttribute('crossorigin', 'anonymous');
-//				video.src = "video/GoPro-VR-Tahiti-Surf.mp4";
-//				video.src = "video/Apartment_tour.mp4";
   video.src = file;
   var texture = new THREE.VideoTexture(video);
   texture.minFilter = THREE.LinearFilter;
@@ -54,6 +53,11 @@ function init(file) {
   $(document).on("mousedown", onDocumentMouseDown);
   $(document).on("mousemove", onDocumentMouseMove);
   $(document).on("mouseup", onDocumentMouseUp);
+
+  document.addEventListener('onTouchStart', onTouchStart, false);
+  document.addEventListener('onTouchMove', onTouchMove, false);
+  document.addEventListener('onTouchEnd', onTouchEnd, false);
+
   $(document).on("mousewheel", onDocumentMouseWheel);
   $(document).on("MozMousePixelScroll", onDocumentMouseWheel);
 
@@ -63,7 +67,8 @@ function init(file) {
 
   $(document).keyup(function(e) {
     if (e.keyCode == 27) {
-
+      console.log("ESC");
+      $('canvas').remove();
     }
   });
 
@@ -76,6 +81,37 @@ function onWindowResize() {
 
   //renderer.setSize( window.innerWidth, window.innerHeight );
 
+}
+
+function onTouchStart(event) {
+  console.log("onTouchStart");
+  event.preventDefault();
+
+  isUserInteracting = true;
+
+  onPointerDownPointerX = event.changedTouches[0].clientX;
+  onPointerDownPointerY = event.changedTouches[0].clientY;
+
+  onPointerDownLon = lon;
+  onPointerDownLat = lat;
+}
+
+function onTouchMove(event) {
+  console.log("onTouchMove");
+
+
+  if ( isUserInteracting === true ) {
+
+    lon = ( onPointerDownPointerX - event.changedTouches[0].clientX ) * 0.1 + onPointerDownLon;
+    lat = - ( event.changedTouches[0].clientY - onPointerDownPointerY ) * 0.1 + onPointerDownLat;
+
+  }
+
+}
+
+function onTouchEnd(event) {
+  console.log("onTouchEnd");
+  isUserInteracting = false;
 }
 
 function onDocumentMouseDown(event) {
