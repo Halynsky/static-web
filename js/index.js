@@ -35,6 +35,7 @@ function init(file) {
   // video.volume = 0;
   video.setAttribute('crossorigin', 'anonymous');
   video.src = file;
+  // video.src = "https://s3-eu-west-1.amazonaws.com/ireland-video-output/videos/pan/cockpit360.mp4";
   // video.src = "https://web-video-player-360.herokuapp.com/video/360_Test_Drive_Megane_GT.mp4";
   var texture = new THREE.VideoTexture(video);
   texture.minFilter = THREE.LinearFilter;
