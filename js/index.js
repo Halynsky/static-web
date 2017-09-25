@@ -34,7 +34,8 @@ function init(file) {
   video.loop = true;
   // video.volume = 0;
   video.setAttribute('crossorigin', 'anonymous');
-  video.src = "https://web-video-player-360.herokuapp.com/video/360_Test_Drive_Megane_GT.mp4";
+  video.src = file;
+  // video.src = "https://web-video-player-360.herokuapp.com/video/360_Test_Drive_Megane_GT.mp4";
   var texture = new THREE.VideoTexture(video);
   texture.minFilter = THREE.LinearFilter;
   texture.format = THREE.RGBFormat;
