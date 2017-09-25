@@ -5,8 +5,8 @@ var texture_placeholder,
   lon = 0, onMouseDownLon = 0,
   lat = 0, onMouseDownLat = 0,
   phi = 0, theta = 0,
-  initialDistance = 500;
-distance = initialDistance;
+  initialDistance = 500,
+  distance = initialDistance;
 
 function loadVideo(file) {
 
@@ -22,7 +22,7 @@ function init(file) {
 
   var container, mesh;
   container = document.getElementById('container');
-  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1100);
+  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
   camera.target = new THREE.Vector3(0, 0, 0);
   scene = new THREE.Scene();
   var geometry = new THREE.SphereBufferGeometry(initialDistance, 60, 40);
@@ -32,9 +32,9 @@ function init(file) {
   //video.height = 360;
   video.autoplay = true;
   video.loop = true;
-  video.volume = 0;
+  // video.volume = 0;
   video.setAttribute('crossorigin', 'anonymous');
-  video.src = file;
+  video.src = "https://web-video-player-360.herokuapp.com/video/360_Test_Drive_Megane_GT.mp4";
   var texture = new THREE.VideoTexture(video);
   texture.minFilter = THREE.LinearFilter;
   texture.format = THREE.RGBFormat;
@@ -54,16 +54,14 @@ function init(file) {
   $(document).on("mousemove", onDocumentMouseMove);
   $(document).on("mouseup", onDocumentMouseUp);
 
-  document.addEventListener('onTouchStart', onTouchStart, false);
-  document.addEventListener('onTouchMove', onTouchMove, false);
-  document.addEventListener('onTouchEnd', onTouchEnd, false);
+  $(document).on("touchstart", onTouchStart);
+  $(document).on("touchmove", onTouchMove);
+  $(document).on("touchend", onTouchEnd);
 
   $(document).on("mousewheel", onDocumentMouseWheel);
   $(document).on("MozMousePixelScroll", onDocumentMouseWheel);
 
-  //
   $(window).on('resize', onWindowResize);
-
 
   $(document).keyup(function(e) {
     if (e.keyCode == 27) {
@@ -98,7 +96,6 @@ function onTouchStart(event) {
 
 function onTouchMove(event) {
   console.log("onTouchMove");
-
 
   if ( isUserInteracting === true ) {
 
