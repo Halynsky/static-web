@@ -22,7 +22,7 @@ function init(file) {
 
   var container, mesh;
   container = document.getElementById('container');
-  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
+  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, initialDistance * 2);
   camera.target = new THREE.Vector3(0, 0, 0);
   scene = new THREE.Scene();
   var geometry = new THREE.SphereBufferGeometry(initialDistance, 60, 40);
@@ -36,7 +36,7 @@ function init(file) {
   video.setAttribute('crossorigin', 'anonymous');
   video.src = file;
   // video.src = "https://s3-eu-west-1.amazonaws.com/ireland-video-output/videos/pan/cockpit360.mp4";
-  video.src = "https://web-video-player-360.herokuapp.com/video/360_Test_Drive_Megane_GT.mp4";
+  // video.src = "https://web-video-player-360.herokuapp.com/video/360_Test_Drive_Megane_GT.mp4";
   var texture = new THREE.VideoTexture(video);
   texture.minFilter = THREE.LinearFilter;
   texture.format = THREE.RGBFormat;
@@ -62,6 +62,8 @@ function init(file) {
 
   $(document).on("mousewheel", onDocumentMouseWheel);
   $(document).on("MozMousePixelScroll", onDocumentMouseWheel);
+
+  $(window).on('deviceorientation', onDeviceOrientation);
 
   $(window).on('resize', onWindowResize);
 
@@ -146,23 +148,25 @@ function onDocumentMouseUp(event) {
 
 function onDocumentMouseWheel(event) {
 
+  console.log("onDocumentMouseWheel");
+
   // WebKit
 
-  if (event.wheelDeltaY) {
+  if (event.originalEvent.wheelDeltaY) {
 
-    distance -= event.wheelDeltaY * 0.1;
+    distance -= event.originalEvent.wheelDeltaY * 0.1;
 
     // Opera / Explorer 9
 
-  } else if (event.wheelDelta) {
+  } else if (event.originalEvent.wheelDelta) {
 
-    distance -= event.wheelDelta * 0.1;
+    distance -= event.originalEvent.wheelDelta * 0.1;
 
     // Firefox
 
-  } else if (event.detail) {
+  } else if (event.originalEvent.detail) {
 
-    distance += event.detail * 1.0;
+    distance += event.originalEvent.detail * 1.0;
 
   }
 
@@ -173,6 +177,22 @@ function onDocumentMouseWheel(event) {
   if (distance < 0) {
     distance = 1
   }
+
+}
+
+function onDeviceOrientation(event) {
+  console.log("onDeviceOrientation");
+
+  // var alpha = event.originalEvent.alpha;
+  // var beta = event.originalEvent.beta;
+  // var gamma = event.originalEvent.gamma;
+  //
+  // var a = new THREE.Euler( -THREE.Math.degToRad(beta),  THREE.Math.degToRad(alpha), THREE.Math.degToRad(gamma), 'XYZ' );
+  // var b = new THREE.Vector3( 1, 0, 1 );
+  // b.applyEuler(a);
+  // console.log(b);
+  //
+  // camera.target = b;
 
 }
 
