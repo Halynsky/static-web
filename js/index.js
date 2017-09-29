@@ -1,12 +1,10 @@
-var camera, scene, renderer;
+var camera, scene, renderer, controls;
 var texture_placeholder,
   isUserInteracting = false,
-  onMouseDownMouseX = 0, onMouseDownMouseY = 0,
-  lon = 0, onMouseDownLon = 0,
-  lat = 0, onMouseDownLat = 0,
+  lon = 0, lat = 0,
   phi = 0, theta = 0,
   initialDistance = 500,
-  distance = initialDistance;
+  distance = initialDistance, onPointerDownPointerX, onPointerDownPointerY, onPointerDownLon, onPointerDownLat;
 
 function loadVideo(file) {
 
@@ -24,6 +22,7 @@ function init(file) {
   container = document.getElementById('container');
   camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, initialDistance * 2);
   camera.target = new THREE.Vector3(0, 0, 0);
+  controls = new THREE.DeviceOrientationControls(camera);
   scene = new THREE.Scene();
   var geometry = new THREE.SphereBufferGeometry(initialDistance, 60, 40);
   geometry.scale(-1, 1, 1);
@@ -35,8 +34,6 @@ function init(file) {
   // video.volume = 0;
   video.setAttribute('crossorigin', 'anonymous');
   video.src = file;
-  // video.src = "https://s3-eu-west-1.amazonaws.com/ireland-video-output/videos/pan/cockpit360.mp4";
-  // video.src = "https://web-video-player-360.herokuapp.com/video/360_Test_Drive_Megane_GT.mp4";
   var texture = new THREE.VideoTexture(video);
   texture.minFilter = THREE.LinearFilter;
   texture.format = THREE.RGBFormat;
@@ -205,6 +202,14 @@ function animate() {
 
 function update() {
 
+  controls.update();
+  // mouseControl();
+
+  renderer.render(scene, camera);
+
+}
+
+function mouseControl() {
   lat = Math.max(-89.9, Math.min(89.9, lat));
   phi = THREE.Math.degToRad(90 - lat);
   theta = THREE.Math.degToRad(lon);
@@ -214,7 +219,5 @@ function update() {
   camera.position.z = distance * Math.sin(phi) * Math.sin(theta);
 
   camera.lookAt(camera.target);
-
-  renderer.render(scene, camera);
 
 }
