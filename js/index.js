@@ -202,8 +202,8 @@ function animate() {
 
 function update() {
 
-  controls.update();
-  // mouseControl();
+  // controls.update();
+  mouseControl();
 
   renderer.render(scene, camera);
 
